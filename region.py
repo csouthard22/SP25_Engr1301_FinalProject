@@ -8,8 +8,8 @@ class Region:
         Args:
             name (str): The name of the region (e.g., state name or 'US').
         """
-        self.name = name
-        # Implement logic to get entries for this state from every year
+        self.name = util.name_resolver(name)
+
 
     def __grab_data__(self,start_year,end_year):
         """
