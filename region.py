@@ -1,15 +1,27 @@
+import util
 
 class Region:
-    def __init__(self, name, data):
+    def __init__(self, name):
         """
         Initialize a Region object.
 
         Args:
             name (str): The name of the region (e.g., state name or 'US').
-            data (pd.DataFrame): The data associated with the region.
         """
         self.name = name
-        self.data = data
+        # Implement logic to get entries for this state from every year
+
+    def __grab_data__(self,start_year,end_year):
+        """
+        Grabs all data for the state, given a range of years. Uses util.py
+
+        Args:
+            start_year (int): Starting year for data collection
+            end_year (int): Ending year for data collection
+        Returns:
+            dict: All datapoints for the given state and year range
+        """
+        fileList = util.tri_file_pointer(start_year,end_year)
 
     def get_total_emissions(self):
         """
@@ -20,7 +32,7 @@ class Region:
         """
         pass  # Implement logic to calculate total emissions
 
-    def emissions_by_year(self):
+    def emissions_by_year(self,year):
         """
         Get emissions data grouped by year.
 
@@ -28,6 +40,7 @@ class Region:
             pd.DataFrame: Emissions data grouped by year.
         """
         pass  # Implement logic to group emissions by year
+
 
     def top_polluters(self, n=10):
         """
