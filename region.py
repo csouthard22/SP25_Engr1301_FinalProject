@@ -1,4 +1,5 @@
 import util
+import pandas as pd
 
 class Region:
     def __init__(self, name):
@@ -9,19 +10,33 @@ class Region:
             name (str): The name of the region (e.g., state name or 'US').
         """
         self.name = util.name_resolver(name)
+        self.data = {}
 
 
-    def __grab_data__(self,start_year,end_year):
+    def _grab_data(self,start_year,end_year=None):
         """
-        Grabs all data for the state, given a range of years. Uses util.py
+        Grabs all data for the region, given a range of years.
 
         Args:
             start_year (int): Starting year for data collection
             end_year (int): Ending year for data collection
         Returns:
-            dict: All datapoints for the given state and year range
+            None. Updates self.data dictionary
         """
         fileList = util.tri_file_pointer(start_year,end_year)
+
+        if self.name == 'US':
+            for file in fileList:
+                df_filtered = pd.read_csv(file,true_values=['YES'],false_values=['NO'])
+                year = file.split('/')[-1].split('_')[0]
+                self.data[year] = df_filtered
+        else:
+            for file in fileList:
+                df = pd.read_csv(file,true_values=['YES'],false_values=['NO'])
+                df_filtered = df[df['ST'] == self.name]
+                year = file.split('/')[-1].split('_')[0]
+                self.data[year] = df_filtered
+
 
     def get_total_emissions(self):
         """
