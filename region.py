@@ -1,5 +1,7 @@
 import util
 import pandas as pd
+import json
+import matplotlib.pyplot as plt
 
 class Region:
     def __init__(self, name):
@@ -27,9 +29,9 @@ class Region:
 
         if self.name == 'US':
             for file in fileList:
-                df_filtered = pd.read_csv(file,true_values=['YES'],false_values=['NO'])
+                df = pd.read_csv(file,true_values=['YES'],false_values=['NO'])
                 year = file.split('/')[-1].split('_')[0]
-                self.data[year] = df_filtered
+                self.data[year] = df
         else:
             for file in fileList:
                 df = pd.read_csv(file,true_values=['YES'],false_values=['NO'])
@@ -38,22 +40,46 @@ class Region:
                 self.data[year] = df_filtered
 
 
-    def get_total_emissions(self):
+    def _get_emissions(self, start_year, end_year=None):
         """
         Calculate the total emissions for the region.
 
         Returns:
             float: Total emissions.
         """
-        pass  # Implement logic to calculate total emissions
+        pass
+        self._grab_data(start_year,end_year)
+        total = 0.0
 
-    def emissions_by_year(self,year):
+    def top_polluted_cities(self, numCities=5):
+        pass
+
+    def top_polluting_industries(self, numIndustries=5):
+        pass
+
+    def top_polluting_companies(self, numCompanies=5):
+        pass
+
+    def pollution_heatmap(self):
+        pass #use pyplot
+
+    def top_chemicals(self, numChemicals=5):
+        pass
+    
+    def how_cancerous(self):
+        pass # out of ___ pounds of pollution, ___ pounds (_%) were carcinogens
+
+    def pct_forever_chemicals(self):
+        pass
+
+    def emissions_by_year(self,start_year, end_year=None):
         """
         Get emissions data grouped by year.
 
         Returns:
             pd.DataFrame: Emissions data grouped by year.
         """
+        if end_year == None: end_year = start_year
         pass  # Implement logic to group emissions by year
 
 
