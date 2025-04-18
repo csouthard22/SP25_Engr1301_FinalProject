@@ -42,14 +42,25 @@ class Region:
 
     def _get_emissions(self, start_year, end_year=None):
         """
-        Calculate the total emissions for the region.
+        Calculate the total emissions for the region within the specified year range.
+
+        Args:
+            start_year (int): Starting year for data collection
+            end_year (int): Ending year for data collection
 
         Returns:
-            float: Total emissions.
+            float: Total emissions within the specified year range.
         """
-        pass
-        self._grab_data(start_year,end_year)
-        total = 0.0
+        self._grab_data(start_year, end_year)
+        total_emissions = 0.0
+
+        if end_year == None: end_year = start_year
+
+        for year, df in self.data.items():
+            if int(year) >= start_year and int(year) <= end_year:
+                total_emissions += df['TOTAL POLLUTION'].sum()
+
+        return total_emissions
 
     def top_polluted_cities(self, numCities=5):
         pass
