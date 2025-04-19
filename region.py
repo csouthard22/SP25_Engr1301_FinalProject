@@ -60,7 +60,7 @@ class Region:
 
         return total_emissions
 
-    def top_polluted_cities(self, start_year, end_year, numCities=5):
+    def top_polluted_cities(self, start_year, end_year=None, numCities=5):
         """
         Identifies the top polluted cities based on total pollution over a specified time range.
 
@@ -69,7 +69,7 @@ class Region:
 
         Args:
             start_year (int): The starting year of the range for which pollution data is analyzed.
-            end_year (int): The ending year of the range for which pollution data is analyzed.
+            end_year (int, optional): The ending year of the range for which pollution data is analyzed. Defaults to start year.
             numCities (int, optional): The number of top polluted cities to return. Defaults to 5.
 
         Returns:
@@ -91,7 +91,7 @@ class Region:
         sorted_cities = sorted(city_emissions.items(), key=lambda x: x[1], reverse=True)
         return sorted_cities[:numCities]
 
-    def top_polluting_industries(self, start_year, end_year, numIndustries=5):
+    def top_polluting_industries(self, start_year, end_year=None, numIndustries=5):
         """
         Identifies the top polluting industries within a specified time range.
 
@@ -101,7 +101,7 @@ class Region:
 
         Args:
             start_year (int): The starting year of the range for which data is analyzed.
-            end_year (int): The ending year of the range for which data is analyzed.
+            end_year (int, optional): The ending year of the range for which data is analyzed. Defaults to start year
             numIndustries (int, optional): The number of top polluting industries to return. Defaults to 5.
 
         Returns:
@@ -126,8 +126,37 @@ class Region:
     def pollution_heatmap(self):
         pass #use pyplot
 
-    def top_chemicals(self, numChemicals=5):
-        pass
+    def top_chemicals(self, start_year, end_year=None, numChemicals=5):
+        """
+        Identify the top chemicals contributing to pollution over a specified time range.
+
+        This method calculates the total pollution caused by each chemical across the 
+        specified years and returns the top `numChemicals` chemicals with the highest 
+        pollution levels.
+
+        Args:
+            start_year (int): The starting year for the data analysis.
+            end_year (int, optional): The ending year for the data analysis. Defaults to start year
+            numChemicals (int, optional): The number of top chemicals to return. Defaults to 5.
+
+        Returns:
+            list of tuple: A list of tuples where each tuple contains a chemical name 
+            (str) and its total pollution (float), sorted in descending order of 
+            pollution. The length of the list is determined by `numChemicals`.
+        """
+        self._grab_data(start_year,end_year)
+        chemicals_list = {}
+
+        for year, df in self.data.items():
+            chemicals = df.groupby('CHEMICAL')['TOTAL POLLUTION'].sum()
+            for chemical, emissions in chemicals.items():
+                if chemical in chemicals_list:
+                    chemicals_list[chemical] += emissions
+                else:
+                    chemicals_list[chemical] = emissions
+
+        sorted_chemicals = sorted(chemicals_list.items(), key=lambda x: x[1], reverse=True)
+        return sorted_chemicals[:numChemicals]
     
     def how_cancerous(self):
         pass # out of ___ pounds of pollution, ___ pounds (_%) were carcinogens
