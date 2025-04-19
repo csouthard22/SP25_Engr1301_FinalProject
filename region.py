@@ -158,8 +158,28 @@ class Region:
         sorted_chemicals = sorted(chemicals_list.items(), key=lambda x: x[1], reverse=True)
         return sorted_chemicals[:numChemicals]
     
-    def how_cancerous(self):
-        pass # out of ___ pounds of pollution, ___ pounds (_%) were carcinogens
+    def how_cancerous(self, start_year, end_year=None):
+        """
+        Calculate the proportion of carcinogenic emissions within the specified year range.
+
+        Args:
+            start_year (int): Starting year for data collection.
+            end_year (int, optional): Ending year for data collection. Defaults to start year.
+
+        Returns:
+            str: A summary of the total pollution and the proportion that is carcinogenic.
+        """
+        total_emissions = self._total_emissions(start_year,end_year)
+        self._grab_data(start_year, end_year)
+        carcinogenic_emissions = 0.0
+
+        for year, df in self.data.items():
+            total_emissions += df['TOTAL POLLUTION'].sum()
+            carcinogenic_emissions += df[df['CARCINOGEN'] == True]['TOTAL POLLUTION'].sum()
+
+        if end_year == None: end_year = start_year
+        percentage_carcinogenic = (carcinogenic_emissions / total_emissions) * 100
+        return f"Out of {total_emissions:.2f} pounds of pollution in {start_year}-{end_year}, {carcinogenic_emissions:.2f} pounds ({percentage_carcinogenic:.2f}%) were carcinogenic."
 
     def pct_forever_chemicals(self):
         pass
