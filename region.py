@@ -173,17 +173,38 @@ class Region:
         """
         pass  # Implement logic to group emissions by year
 
-    def top_polluters(self, n=5):
+    def top_polluting_companies(self, start_year, end_year=None, numCompanies=5):
         """
-        Get the top N polluters in the region.
+        Identifies the top polluting companies within a specified time range.
+
+        This method calculates the total pollution emitted by each company 
+        across the specified years and returns the top `numCompanies` 
+        contributors to pollution.
 
         Args:
-            n (int): Number of top polluters to return.
+            start_year (int): The starting year for the data analysis.
+            end_year (int, optional): The ending year for the data analysis. Defaults to start year.
+            numCompanies (int, optional): The number of top polluting companies 
+                to return. Defaults to 5.
 
         Returns:
-            pd.DataFrame: Data of the top N polluters.
+            list: A list of tuples, where each tuple contains a company name 
+            (str) and its total pollution (float), sorted in descending order 
+            of pollution. The length of the list is determined by `numCompanies`.
         """
-        pass  # Implement logic to find top polluters
+        self._grab_data(start_year)
+        companies_list = {}
+
+        for year, df in self.data.items():
+            companies = df.groupby('PARENT CO NAME')['TOTAL POLLUTION'].sum()
+            for company, emissions in companies.items():
+                if company in companies_list:
+                    companies_list[company] += emissions
+                else:
+                    companies_list[company] = emissions
+
+        sorted_companies = sorted(companies_list.items(), key=lambda x: x[1], reverse=True)
+        return sorted_companies[:numCompanies]
 
     def plot_trend(self,start_year=1987,end_year=2023):
         """
