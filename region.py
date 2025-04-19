@@ -61,6 +61,22 @@ class Region:
         return total_emissions
 
     def top_polluted_cities(self, start_year, end_year, numCities=5):
+        """
+        Identifies the top polluted cities based on total pollution over a specified time range.
+
+        This method processes pollution data for the given range of years, aggregates the total 
+        pollution for each city, and returns the top cities with the highest pollution levels.
+
+        Args:
+            start_year (int): The starting year of the range for which pollution data is analyzed.
+            end_year (int): The ending year of the range for which pollution data is analyzed.
+            numCities (int, optional): The number of top polluted cities to return. Defaults to 5.
+
+        Returns:
+            list: A list of tuples where each tuple contains a city name (str) and its total 
+                  pollution (float), sorted in descending order of pollution. The list contains 
+                  up to `numCities` entries.
+        """
         self._grab_data(start_year,end_year)
         city_emissions = {}
 
@@ -76,6 +92,23 @@ class Region:
         return sorted_cities[:numCities]
 
     def top_polluting_industries(self, start_year, end_year, numIndustries=5):
+        """
+        Identifies the top polluting industries within a specified time range.
+
+        This method calculates the total pollution emitted by each industry sector
+        over the specified range of years and returns the top industries based on
+        their total emissions.
+
+        Args:
+            start_year (int): The starting year of the range for which data is analyzed.
+            end_year (int): The ending year of the range for which data is analyzed.
+            numIndustries (int, optional): The number of top polluting industries to return. Defaults to 5.
+
+        Returns:
+            list of tuple: A list of tuples where each tuple contains an industry sector (str)
+            and its corresponding total pollution (float), sorted in descending order of pollution.
+            The list contains up to `numIndustries` entries.
+        """
         self._grab_data(start_year,end_year)
         industry_emissions = {}
 
