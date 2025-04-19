@@ -47,4 +47,4 @@ def name_resolver(name):
     if name.upper() in state_data.values():
         return name.upper()
     
-    raise ValueError(f"'{name}' is not a valid state name or abbreviation.")
+    raise KeyError(f"'{name}' is not a valid state name or abbreviation.")
