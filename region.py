@@ -60,8 +60,20 @@ class Region:
 
         return total_emissions
 
-    def top_polluted_cities(self, numCities=5):
-        pass
+    def top_polluted_cities(self, start_year, end_year, numCities=5):
+        self._grab_data(start_year,end_year)
+        city_emissions = {}
+
+        for year, df in self.data.items():
+            cities = df.groupby('CITY')['TOTAL POLLUTION'].sum()
+            for city, emissions in cities.items():
+                if city in city_emissions:
+                    city_emissions[city] += emissions
+                else:
+                    city_emissions[city] = emissions
+
+        sorted_cities = sorted(city_emissions.items(), key=lambda x: x[1], reverse=True)
+        return sorted_cities[:numCities]
 
     def top_polluting_industries(self, start_year, end_year, numIndustries=5):
         self._grab_data(start_year,end_year)
