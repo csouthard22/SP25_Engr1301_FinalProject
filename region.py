@@ -14,7 +14,6 @@ class Region:
         self.name = util.name_resolver(name)
         self.data = {}
 
-
     def _grab_data(self,start_year,end_year=None):
         """
         Grabs all data for the region, given a range of years.
@@ -39,8 +38,7 @@ class Region:
                 year = file.split('/')[-1].split('_')[0]
                 self.data[year] = df_filtered
 
-
-    def _get_emissions(self, start_year, end_year=None):
+    def _total_emissions(self, start_year, end_year=None):
         """
         Calculate the total emissions for the region within the specified year range.
 
@@ -65,11 +63,20 @@ class Region:
     def top_polluted_cities(self, numCities=5):
         pass
 
-    def top_polluting_industries(self, numIndustries=5):
-        pass
+    def top_polluting_industries(self, start_year, end_year, numIndustries=5):
+        self._grab_data(start_year,end_year)
+        industry_emissions = {}
 
-    def top_polluting_companies(self, numCompanies=5):
-        pass
+        for year, df in self.data.items():
+            industries = df.groupby('INDUSTRY SECTOR')['TOTAL POLLUTION'].sum()
+            for industry, emissions in industries.items():
+                if industry in industry_emissions:
+                    industry_emissions[industry] += emissions
+                else:
+                    industry_emissions[industry] = emissions
+
+        sorted_industries = sorted(industry_emissions.items(), key=lambda x: x[1], reverse=True)
+        return sorted_industries[:numIndustries]
 
     def pollution_heatmap(self):
         pass #use pyplot
@@ -83,18 +90,16 @@ class Region:
     def pct_forever_chemicals(self):
         pass
 
-    def emissions_by_year(self,start_year, end_year=None):
+    def emissions_by_year(self,start_year, end_year):
         """
         Get emissions data grouped by year.
 
         Returns:
             pd.DataFrame: Emissions data grouped by year.
         """
-        if end_year == None: end_year = start_year
         pass  # Implement logic to group emissions by year
 
-
-    def top_polluters(self, n=10):
+    def top_polluters(self, n=5):
         """
         Get the top N polluters in the region.
 
