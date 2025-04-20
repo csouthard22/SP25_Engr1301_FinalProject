@@ -1,5 +1,6 @@
 import util
 import pandas as pd
+import geopandas as gpd
 import json
 import matplotlib.pyplot as plt
 
@@ -24,6 +25,7 @@ class Region:
         Returns:
             None. Updates self.data dictionary
         """
+        self.data = {}
         fileList = util.tri_file_pointer(start_year,end_year)
 
         if self.name == 'US':
@@ -122,9 +124,6 @@ class Region:
 
         sorted_industries = sorted(industry_emissions.items(), key=lambda x: x[1], reverse=True)
         return [(industry, f"{emissions:.2f} pounds") for industry, emissions in sorted_industries[:numIndustries]]
-
-    def pollution_heatmap(self):
-        pass #use pyplot
 
     def top_chemicals(self, start_year, end_year=None, numChemicals=5):
         """
@@ -244,6 +243,45 @@ class Region:
 
         sorted_companies = sorted(companies_list.items(), key=lambda x: x[1], reverse=True)
         return [(company, f"{emissions:.2f} pounds") for company, emissions in sorted_companies[:numCompanies]]
+
+    def pollution_heatmap(self, start_year, end_year=None):
+        states_gdf = util.us_states
+        self._grab_data(start_year, end_year)
+
+        if end_year is None:
+            end_year = start_year
+
+        combined_data = pd.DataFrame()
+        for year, df in self.data.items():
+            combined_data = pd.concat([combined_data, df])
+
+        pollution_gdf = gpd.GeoDataFrame(
+            combined_data,
+            geometry=gpd.points_from_xy(combined_data['LONGITUDE'], combined_data['LATITUDE'])
+        )
+
+        if self.name == 'US':
+            ax = states_gdf.plot(color='white', edgecolor='black', figsize=(15, 10))
+        else:
+            state_gdf = states_gdf[states_gdf['NAME'] == self.name]
+            ax = state_gdf.plot(color='white', edgecolor='black', figsize=(15, 10))
+        """ ^^^^^^^^^^^^^^^^^^^^
+        fix later. need to make it so that i can match the name in the json (long form) to self.name (abbreviation)
+        maybe can do this with some sort of backwards util.name_resolver
+        also the state_gdf = ... is not correct notation for a json but ill leave it there so i keep the essence of what im trying to do
+        too tired to keep working. goodnight
+        """
+        pollution_gdf.plot(
+            ax=ax,
+            markersize=pollution_gdf['TOTAL POLLUTION'] / pollution_gdf['TOTAL POLLUTION'].max() * 100,
+            color='red',
+            alpha=0.5
+        )
+
+        plt.title(f"Pollution Heatmap ({start_year}-{end_year}) - {self.name}", fontsize=16)
+        plt.xlabel("Longitude", fontsize=12)
+        plt.ylabel("Latitude", fontsize=12)
+        plt.show()
 
     def plot_trend(self,start_year=1987,end_year=2023):
         """
