@@ -89,7 +89,7 @@ class Region:
                     city_emissions[city] = emissions
 
         sorted_cities = sorted(city_emissions.items(), key=lambda x: x[1], reverse=True)
-        return sorted_cities[:numCities]
+        return [(city, f"{emissions:.2f} pounds") for city, emissions in sorted_cities[:numCities]]
 
     def top_polluting_industries(self, start_year, end_year=None, numIndustries=5):
         """
@@ -121,7 +121,7 @@ class Region:
                     industry_emissions[industry] = emissions
 
         sorted_industries = sorted(industry_emissions.items(), key=lambda x: x[1], reverse=True)
-        return sorted_industries[:numIndustries]
+        return [(industry, f"{emissions:.2f} pounds") for industry, emissions in sorted_industries[:numIndustries]]
 
     def pollution_heatmap(self):
         pass #use pyplot
@@ -156,7 +156,7 @@ class Region:
                     chemicals_list[chemical] = emissions
 
         sorted_chemicals = sorted(chemicals_list.items(), key=lambda x: x[1], reverse=True)
-        return sorted_chemicals[:numChemicals]
+        return [(chemical, f"{emissions:.2f} pounds") for chemical, emissions in sorted_chemicals[:numChemicals]]
     
     def how_cancerous(self, start_year, end_year=None):
         """
@@ -212,17 +212,6 @@ class Region:
         else:
             return f"Out of {total_emissions:.2f} pounds of pollution in {start_year}-{end_year}, {pfa_emissions:.2f} pounds ({percentage_pfa:.2f}%) were PFAs (forever chemicals)."
 
-
-
-    def emissions_by_year(self,start_year, end_year):
-        """
-        Get emissions data grouped by year.
-
-        Returns:
-            pd.DataFrame: Emissions data grouped by year.
-        """
-        pass  # Implement logic to group emissions by year
-
     def top_polluting_companies(self, start_year, end_year=None, numCompanies=5):
         """
         Identifies the top polluting companies within a specified time range.
@@ -254,7 +243,7 @@ class Region:
                     companies_list[company] = emissions
 
         sorted_companies = sorted(companies_list.items(), key=lambda x: x[1], reverse=True)
-        return sorted_companies[:numCompanies]
+        return [(company, f"{emissions:.2f} pounds") for company, emissions in sorted_companies[:numCompanies]]
 
     def plot_trend(self,start_year=1987,end_year=2023):
         """
