@@ -174,15 +174,45 @@ class Region:
         carcinogenic_emissions = 0.0
 
         for year, df in self.data.items():
-            total_emissions += df['TOTAL POLLUTION'].sum()
             carcinogenic_emissions += df[df['CARCINOGEN'] == True]['TOTAL POLLUTION'].sum()
 
-        if end_year == None: end_year = start_year
         percentage_carcinogenic = (carcinogenic_emissions / total_emissions) * 100
-        return f"Out of {total_emissions:.2f} pounds of pollution in {start_year}-{end_year}, {carcinogenic_emissions:.2f} pounds ({percentage_carcinogenic:.2f}%) were carcinogenic."
 
-    def pct_forever_chemicals(self):
-        pass
+        if end_year == None:
+            return f"Out of {total_emissions:.2f} pounds of pollution in {start_year}, {carcinogenic_emissions:.2f} pounds ({percentage_carcinogenic:.2f}%) were carcinogenic."
+        else:
+            return f"Out of {total_emissions:.2f} pounds of pollution in {start_year}-{end_year}, {carcinogenic_emissions:.2f} pounds ({percentage_carcinogenic:.2f}%) were carcinogenic."
+
+    def pct_forever_chemicals(self, start_year, end_year=None):
+        """
+        Calculate the percentage of pollution attributed to PFAS (forever chemicals) 
+        within a specified time range.
+
+        Args:
+            start_year (int): The starting year for the calculation.
+            end_year (int, optional): The ending year for the calculation. Defaults to None.
+
+        Returns:
+            str: A formatted string indicating the total pollution, the amount of 
+                 pollution attributed to PFAS, and the percentage of PFAS pollution 
+                 for the specified time range.
+        """
+        total_emissions = self._total_emissions(start_year,end_year)
+        self._grab_data(start_year, end_year)
+        pfa_emissions = 0.0
+
+        for year, df in self.data.items():
+            pfa_emissions += df[df['PFAS'] == True]['TOTAL POLLUTION'].sum()
+
+        percentage_pfa = (pfa_emissions / total_emissions) * 100
+
+
+        if end_year == None:
+            return f"Out of {total_emissions:.2f} pounds of pollution in {start_year}, {pfa_emissions:.2f} pounds ({percentage_pfa:.2f}%) were PFAs (forever chemicals)."
+        else:
+            return f"Out of {total_emissions:.2f} pounds of pollution in {start_year}-{end_year}, {pfa_emissions:.2f} pounds ({percentage_pfa:.2f}%) were PFAs (forever chemicals)."
+
+
 
     def emissions_by_year(self,start_year, end_year):
         """
