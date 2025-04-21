@@ -263,12 +263,6 @@ class Region:
         else:
             state_gdf = states_gdf[states_gdf['name'] == self.longName]
             ax = state_gdf.plot(color='white', edgecolor='black', figsize=(15, 10))
-        """ ^^^^^^^^^^^^^^^^^^^^
-        fix later. need to make it so that i can match the name in the json (long form) to self.name (abbreviation)
-        maybe can do this with some sort of backwards util.name_resolver
-        also the state_gdf = ... is not correct notation for a json but ill leave it there so i keep the essence of what im trying to do
-        too tired to keep working. goodnight
-        """
         pollution_gdf.plot(
             ax=ax,
             markersize=pollution_gdf['TOTAL POLLUTION'] / pollution_gdf['TOTAL POLLUTION'].max() * 100,
