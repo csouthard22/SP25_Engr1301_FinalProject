@@ -300,9 +300,9 @@ class Region:
         emissions = np.array([self._total_emissions(year) for year in years]) / 1000000000
         us_emissions = np.array([Region('US')._total_emissions(year) for year in years]) / 50 / 1000000000
 
-        plt.plot(years,emissions, label=f"{self.longName} Emissions", color='blue')
+        plt.plot(years,emissions, label=f"{self.name} Emissions", color='blue')
         plt.plot(years,us_emissions, label="US Average Emissions (per state)", color='orange', linestyle='--')
-        plt.title(f"{self.name} Pollution Trend ({start_year}-{end_year})", fontsize=16)
+        plt.title(f"{self.longName} Pollution Trend ({start_year}-{end_year})", fontsize=16)
         plt.xlabel("Year", fontsize=12)
         plt.ylabel("Total Emissions (Billion Pounds)", fontsize=12)
         plt.legend()
