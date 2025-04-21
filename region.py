@@ -26,20 +26,16 @@ class Region:
         Returns:
             None. Updates self.data dictionary
         """
-        self.data = {}
         fileList = util.tri_file_pointer(start_year,end_year)
 
-        if self.name == 'US':
-            for file in fileList:
-                df = pd.read_csv(file,true_values=['YES'],false_values=['NO'])
-                year = file.split('/')[-1].split('_')[0]
-                self.data[year] = df
-        else:
-            for file in fileList:
-                df = pd.read_csv(file,true_values=['YES'],false_values=['NO'])
-                df_filtered = df[df['ST'] == self.name]
-                year = file.split('/')[-1].split('_')[0]
-                self.data[year] = df_filtered
+        for file in fileList:
+            year = int(file.split('/')[-1].split('_')[0])
+            if start_year <= year <= end_year:
+                if year not in self.data:
+                    df = pd.read_csv(file, true_values=['YES'], false_values=['NO'])
+                    if self.name != 'US':
+                        df = df[df['ST'] == self.name]
+                    self.data[year] = df
 
     def _total_emissions(self, start_year, end_year=None):
         """
