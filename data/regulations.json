@@ -1,0 +1,42 @@
+[
+    {
+      "year": 1990,
+      "name": "Clean Air Act Amendments",
+      "description": "Expanded Clean Air Act to regulate hazardous air pollutants (HAPs), added Title V permits, and targeted industrial emissions."
+    },
+    {
+      "year": 1998,
+      "name": "TRI Industry Expansion",
+      "description": "TRI program expanded to include additional sectors like metal mining and electric utilities."
+    },
+    {
+      "year": 2000,
+      "name": "PBT Chemical Reporting Added",
+      "description": "Added Persistent, Bioaccumulative, and Toxic (PBT) chemicals to TRI reporting requirements."
+    },
+    {
+      "year": 2005,
+      "name": "Clean Air Mercury Rule (CAMR)",
+      "description": "Established a cap-and-trade program to reduce mercury emissions from coal-fired power plants."
+    },
+    {
+      "year": 2008,
+      "name": "CAMR Vacated",
+      "description": "D.C. Circuit Court vacated the Clean Air Mercury Rule."
+    },
+    {
+      "year": 2012,
+      "name": "Mercury and Air Toxics Standards (MATS)",
+      "description": "Imposed strict mercury and air toxic emission limits on coal- and oil-fired power plants."
+    },
+    {
+      "year": 2015,
+      "name": "Clean Power Plan",
+      "description": "Aimed to reduce CO2 emissions from power plants to 78% of 2005 levels by 2030."
+    },
+    {
+      "year": 2017,
+      "name": "CPP Repealed",
+      "description": "Clean Power Plan repealed after US left Paris Climate Agreement."
+    }
+  ]

@@ -3,6 +3,7 @@ import pandas as pd
 import geopandas as gpd
 import numpy as np
 import json
+from matplotlib.ticker import MaxNLocator, MultipleLocator
 import matplotlib.pyplot as plt
 
 class Region:
@@ -304,21 +305,21 @@ class Region:
             plt.plot(years,us_emissions, label="US Average Emissions (per state)", color='orange', linestyle='--')
         plt.xlabel("Year", fontsize=12)
         plt.ylabel("Total Emissions (Billion Pounds)", fontsize=12)
-        plt.xticks(years)
+        ax = plt.gca()
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+        ax.xaxis.set_minor_locator(MultipleLocator(1))
         plt.legend()
         plt.grid(True)
         if show==True: plt.show()
         
-
-    def compare(self, other_region, start_year, end_year=None):
+    def compare(self, other_region, start_year, end_year=2023):
         """
         Compare the pollution trends of the current region with another region over a specified time period.
 
         Args:
             other_region (str): The other region to compare against. String representing the region's name.
             start_year (int): The starting year of the comparison period.
-            end_year (int, optional): The ending year of the comparison period. Defaults to None,
-                which indicates the comparison will be made up to the most recent data available (2023).
+            end_year (int, optional): The ending year of the comparison period. Defaults to 2023.
 
         Behavior:
             - Plots the pollution trend of the current region in blue.
@@ -330,3 +331,45 @@ class Region:
         comparison.plot_trend(start_year,end_year, 'red', show=False)
 
         plt.title(f"{self.longName} vs {comparison.longName} Pollution Trend ({start_year}-{end_year})", fontsize=16)
+
+    def regulation_impact(self, start_year=1987, end_year=2023):
+        """
+        Visualizes the impact of regulations on a trend within a specified time range.
+
+        This method plots a trend for the given time range and overlays vertical lines
+        and annotations for regulations that occurred within the same period. It also
+        prints the details of the relevant regulations to the console.
+
+        Args:
+            start_year (int, optional): The starting year for the analysis. Defaults to 1987.
+            end_year (int, optional): The ending year for the analysis. Defaults to 2023.
+
+        Behavior:
+            - Calls the `plot_trend` method to visualize the trend data for the specified
+              time range without comparing to the average and without displaying the plot immediately.
+            - Reads regulation data from a JSON file located at 'data/regulations.json'.
+            - Filters regulations that fall within the specified time range.
+            - For each relevant regulation:
+                - Adds a vertical dashed line on the plot at the year of the regulation.
+                - Annotates the plot with the regulation's name and year.
+            - Prints the year, name, and description of each relevant regulation to the console.
+        """
+        self.plot_trend(start_year=start_year, end_year=end_year, compare_to_avg=False, show=False)
+
+        with open('data/regulations.json', 'r') as f:
+            regulations = json.load(f)
+
+        relevant_regulations = [reg for reg in regulations if start_year <= int(reg['year']) <= end_year]
+
+        for reg in relevant_regulations:
+            plt.axvline(x=reg['year'], color='gray', linestyle='--', linewidth=1)
+            plt.text(
+                reg['year'], plt.gca().get_ylim()[1] * 0.8,
+                f"{reg['name']}\n({reg['year']})",
+                rotation=90, fontsize=8, color='gray', ha='center', va='center', alpha=0.7
+            )
+
+        plt.gcf().set_size_inches(12, 6)
+        plt.show()
+        for reg in relevant_regulations:
+            print(f"{reg['year']}: {reg['name']} \n \t {reg['description']}")
