@@ -28,6 +28,8 @@ class Region:
         """
         fileList = util.tri_file_pointer(start_year,end_year)
 
+        if end_year is None: end_year = start_year
+
         for file in fileList:
             year = int(file.split('/')[-1].split('_')[0])
             if start_year <= year <= end_year:
