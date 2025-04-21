@@ -275,7 +275,7 @@ class Region:
         plt.ylabel("Latitude", fontsize=12)
         plt.show()
 
-    def plot_trend(self,start_year=1987,end_year=2023,compare_to_avg=True):
+    def plot_trend(self,start_year=1987,end_year=2023, color='blue', compare_to_avg=True, show=True,):
         """
         Plots the pollution trend for the region over a specified range of years.
 
@@ -285,9 +285,11 @@ class Region:
 
         Args:
             start_year (int, optional): The starting year for the trend plot. Defaults to 1987.
-            end_year (int, optional): The ending year for the trend plot. Defaults to 2023.
+            end_year (int, optional): The ending year for the trend plot. Defaults to 2023, the most recent data available.
             compare_to_avg (bool, optional): Controls whether the trendline is compared to US average
                 emissions. Defaults to True.
+            show (bool, optional): Controls whether or not the trendline is shown. Defaults to True.
+                No reason to change this manually. Only useful when running comparison method with other region.
 
         Returns:
             - None. Displays a matplotlib plot showing the emissions trend for the region and the US average.
@@ -295,27 +297,36 @@ class Region:
         years = np.arange(start_year, end_year + 1)
         emissions = np.array([self._total_emissions(year) for year in years]) / 1000000000
 
+        plt.plot(years,emissions, label=f"{self.name} Emissions", color=color)
+        plt.title(f"{self.longName} Pollution Trend ({start_year}-{end_year})", fontsize=16)
         if compare_to_avg == True:
             us_emissions = np.array([Region('US')._total_emissions(year) for year in years]) / 50 / 1000000000
             plt.plot(years,us_emissions, label="US Average Emissions (per state)", color='orange', linestyle='--')
-
-        plt.plot(years,emissions, label=f"{self.name} Emissions", color='blue')
-        plt.title(f"{self.longName} Pollution Trend ({start_year}-{end_year})", fontsize=16)
         plt.xlabel("Year", fontsize=12)
         plt.ylabel("Total Emissions (Billion Pounds)", fontsize=12)
+        plt.xticks(years)
         plt.legend()
         plt.grid(True)
-        plt.show
+        if show==True: plt.show()
         
 
-    def compare(self, other_region):
+    def compare(self, other_region, start_year, end_year=None):
         """
-        Compare emissions data with another region.
+        Compare the pollution trends of the current region with another region over a specified time period.
 
         Args:
-            other_region (Region): Another Region object to compare with.
+            other_region (str): The other region to compare against. String representing the region's name.
+            start_year (int): The starting year of the comparison period.
+            end_year (int, optional): The ending year of the comparison period. Defaults to None,
+                which indicates the comparison will be made up to the most recent data available (2023).
 
-        Returns:
-            dict: Comparison metrics between the two regions.
+        Behavior:
+            - Plots the pollution trend of the current region in blue.
+            - Plots the pollution trend of the other region in red.
+            - Displays a title indicating the comparison between the two regions and the time period.
         """
-        pass  # Implement logic to compare with another region
+        comparison = Region(other_region)
+        self.plot_trend(start_year, end_year, 'blue', False, False)
+        comparison.plot_trend(start_year,end_year, 'red', show=False)
+
+        plt.title(f"{self.longName} vs {comparison.longName} Pollution Trend ({start_year}-{end_year})", fontsize=16)
