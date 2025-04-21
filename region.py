@@ -51,15 +51,13 @@ class Region:
             float: Total emissions within the specified year range.
         """
         self._grab_data(start_year, end_year)
-        total_emissions = 0.0
-
         if end_year == None: end_year = start_year
 
-        for year, df in self.data.items():
-            if int(year) >= start_year and int(year) <= end_year:
-                total_emissions += df['TOTAL POLLUTION'].sum()
-
-        return total_emissions
+        combined_data = pd.concat(
+            [df for year, df in self.data.items() if start_year <= int(year) <= end_year],
+            ignore_index=True
+        )
+        return combined_data['TOTAL POLLUTION'].sum()
 
     def top_polluted_cities(self, start_year, end_year=None, numCities=5):
         """
