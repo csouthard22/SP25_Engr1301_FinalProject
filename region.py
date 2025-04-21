@@ -15,6 +15,7 @@ class Region:
         """
         self.name = util.name_resolver(name)
         self.data = {}
+        self.longName = util.long_name_resolver(self.name)
 
     def _grab_data(self,start_year,end_year=None):
         """
@@ -260,7 +261,7 @@ class Region:
         if self.name == 'US':
             ax = states_gdf.plot(color='white', edgecolor='black', figsize=(15, 10))
         else:
-            state_gdf = states_gdf[states_gdf['NAME'] == self.name]
+            state_gdf = states_gdf[states_gdf['name'] == self.name]
             ax = state_gdf.plot(color='white', edgecolor='black', figsize=(15, 10))
         """ ^^^^^^^^^^^^^^^^^^^^
         fix later. need to make it so that i can match the name in the json (long form) to self.name (abbreviation)
@@ -299,7 +300,7 @@ class Region:
         emissions = np.array([self._total_emissions(year) for year in years]) / 1000000000
         us_emissions = np.array([Region('US')._total_emissions(year) for year in years]) / 50 / 1000000000
 
-        plt.plot(years,emissions, label=f"{self.name} Emissions", color='blue')
+        plt.plot(years,emissions, label=f"{self.longName} Emissions", color='blue')
         plt.plot(years,us_emissions, label="US Average Emissions (per state)", color='orange', linestyle='--')
         plt.title(f"{self.name} Pollution Trend ({start_year}-{end_year})", fontsize=16)
         plt.xlabel("Year", fontsize=12)
