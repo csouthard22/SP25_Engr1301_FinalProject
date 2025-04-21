@@ -1,6 +1,7 @@
 import util
 import pandas as pd
 import geopandas as gpd
+import numpy as np
 import json
 import matplotlib.pyplot as plt
 
@@ -284,14 +285,34 @@ class Region:
         plt.show()
 
     def plot_trend(self,start_year=1987,end_year=2023):
-        """
-        Plot the trend of emissions over time for the region.
+        def plot_trend(self, start_year=1987, end_year=2023):
+            """
+            Plots the pollution trend for the region over a specified range of years.
 
-        Args:
-            start_year (int): Starting year of trend. Default 1987
-            end_year (int): Ending year of trend. Default 1987
-        """
-        pass  # Implement logic to plot emissions trend
+            This method generates a line plot comparing the total emissions of the region
+            to the average emissions of the United States over the specified time period.
+            The emissions are displayed in billions of pounds.
+
+            Args:
+                start_year (int, optional): The starting year for the trend plot. Defaults to 1987.
+                end_year (int, optional): The ending year for the trend plot. Defaults to 2023.
+
+            Returns:
+                - None. Displays a matplotlib plot showing the emissions trend for the region and the US average.
+            """
+        years = np.arange(start_year, end_year + 1)
+        emissions = np.array([self._total_emissions(year) for year in years]) / 1000000000
+        us_emissions = np.array([Region('US')._total_emissions(year) for year in years]) / 50 / 1000000000
+
+        plt.plot(years,emissions, label=f"{self.name} Emissions", color='blue')
+        plt.plot(years,us_emissions, label="US Average Emissions", color='orange', linestyle='--')
+        plt.title(f"{self.name} Pollution Trend ({start_year}-{end_year})", fontsize=16)
+        plt.xlabel("Year", fontsize=12)
+        plt.ylabel("Total Emissions (Billion Pounds)", fontsize=12)
+        plt.legend()
+        plt.grid(True)
+        plt.show
+        
 
     def compare(self, other_region):
         """
