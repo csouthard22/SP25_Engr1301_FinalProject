@@ -48,3 +48,23 @@ def name_resolver(name):
         return name.upper()
     
     raise KeyError(f"'{name}' is not a valid state name or abbreviation.")
+
+def long_name_resolver(name):
+    """
+    Takes state abbreviation as an input. If input is not a valid state abbreviation, return error.
+    If input is the short-form state name, turn it into the long form.
+
+    Args:
+        name (str): Abbreviation of state
+    Returns:
+        state name in long form
+    """
+    with open('data/states-short.json', 'r') as f:
+        state_data = json.load(f)
+        
+        if name.upper() in state_data.values():
+            for long_name, short_name in state_data.items():
+                if short_name == name.upper():
+                    return long_name
+
+    raise KeyError(f"'{name}' is not a valid state abbreviation.")
