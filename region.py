@@ -261,7 +261,7 @@ class Region:
         if self.name == 'US':
             ax = states_gdf.plot(color='white', edgecolor='black', figsize=(15, 10))
         else:
-            state_gdf = states_gdf[states_gdf['name'] == self.name]
+            state_gdf = states_gdf[states_gdf['name'] == self.longName]
             ax = state_gdf.plot(color='white', edgecolor='black', figsize=(15, 10))
         """ ^^^^^^^^^^^^^^^^^^^^
         fix later. need to make it so that i can match the name in the json (long form) to self.name (abbreviation)
