@@ -244,6 +244,24 @@ class Region:
         return [(company, f"{emissions:.2f} pounds") for company, emissions in sorted_companies[:numCompanies]]
 
     def pollution_heatmap(self, start_year, end_year=None):
+        """
+        Generates and displays a pollution heatmap for the specified region and time period.
+
+        This method visualizes pollution data on a geographical map, with the size of the markers
+        representing the relative pollution levels. The map can display data for the entire US or 
+        a specific state, depending on the region's name.
+
+        Args:
+            start_year (int): The starting year for the pollution data to be visualized.
+            end_year (int, optional): The ending year for the pollution data to be visualized. 
+                If not provided, defaults to the start_year.
+
+        Visualization:
+            - The map is plotted with state boundaries in black and a white background.
+            - Pollution data is represented as red markers, with marker size proportional to 
+              the relative pollution levels.
+            - The map includes a title, and labeled axes for longitude and latitude.
+        """
         states_gdf = util.us_states
         self._grab_data(start_year, end_year)
 
