@@ -1,4 +1,4 @@
-# Analyzing Chemical Plant Emissions Across the U.S.
+# Analyzing Chemical Emissions Across the U.S.
 
 This program explores EPA TRI data to examine trends in pollutant emissions and their relationship to location, industry, and regulations over time.
 
